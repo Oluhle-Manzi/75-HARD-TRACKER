@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <meta name="theme-color" content="#2d89ef">
+    <title>75 Hard Challenge Tracker</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Logo -->
+        <div class="header">
+            <img src="1.png" alt="75-Day Hard Challenge Logo" class="header-logo">
+            <h1>
+                <span class="trophy">🏆</span>
+                75 HARD Challenge
+                <span class="trophy">🏆</span>
+            </h1>
+            <p>Mental toughness through discipline</p>
+        </div>
+
+     <div class="menu-bar">
+            <img src="1.png" alt="Logo" class="menu-logo">
+            <div class="menu-title">Challenge Dashboard</div>
+            <div class="menu-stats">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Progress Overview -->
+        <div class="card">
+            <div class="progress-grid">
+                <div class="progress-item">
+                    <div class="progress-number" style="color: #3498db;" id="current-day">1</div>
+                    <div class="progress-label">Current Day</div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-number" style="color: #2ecc71;" id="completed-days">0</div>
+                    <div class="progress-label">Days Completed</div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-number" style="color: #9b59b6;" id="progress-percent">0%</div>
+                    <div class="progress-label">Progress</div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label">Finish Date</div>
+                    <div style="font-size: 1.2rem; font-weight: bold; color: #2c3e50;" id="finish-date"></div>
+                </div>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.9rem; color: #7f8c8d;">Overall Progress</span>
+                    <span style="font-size: 0.9rem; color: #7f8c8d;" id="progress-text">0/75 days</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Quote -->
+        <div class="quote-card">
+            <div class="quote-day" id="quote-day">Day 1 Motivation</div>
+            <div class="quote-text" id="daily-quote"></div>
+        </div>
+
+        <!-- Current Day Tasks -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
+                <h2 style="font-size: 1.8rem; color: #2c3e50; display: flex; align-items: center; gap: 10px;">
+                    📅 <span id="day-title">Day 1 Tasks</span>
+                </h2>
+                <div>
+                    <label style="margin-right: 10px; font-size: 0.9rem; color: #7f8c8d;">Start Date:</label>
+                    <input type="date" id="start-date" class="date-input">
+                </div>
+            </div>
+            
+            <div class="tasks-container" id="tasks-container">
+                <!-- Tasks will be populated by JavaScript -->
+            </div>
+
+            <div class="controls">
+                <div id="day-status" class="day-status day-incomplete">⏱️ In Progress</div>
+                
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-day">Previous Day</button>
+                    <button class="btn btn-primary" id="next-day">Next Day</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning Card -->
+        <div class="warning-card">
+            <div class="warning-title">
+                ⚠️ AUTO-RESET ACTIVE
+            </div>
+            <div class="warning-text">
+                Miss ANY task on ANY day = Automatic reset to Day 1. The system will detect incomplete days and reset your progress immediately. No exceptions, no mercy.
+            </div>
+        </div>
+
+        <!-- Reset Button -->
+        <div class="reset-section">
+            <button class="btn btn-danger" id="reset-btn">Reset Challenge</button>
+        </div>
+    </div>
+<script src="script.js"></script>
+<script src="service.-worker.js"></script>
+</body>
+</html>
