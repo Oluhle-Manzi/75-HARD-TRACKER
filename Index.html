@@ -9,108 +9,181 @@
     <meta name="theme-color" content="#2d89ef">
     <title>75 Hard Challenge Tracker</title>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Header with Logo -->
-        <div class="header">
-            <img src="1.png" alt="75-Day Hard Challenge Logo" class="header-logo">
-            <h1>
-                <span class="trophy">🏆</span>
-                75 HARD Challenge
-                <span class="trophy">🏆</span>
-            </h1>
-            <p>Mental toughness through discipline</p>
+    
+    <div class="top-menu">
+        <img src="1.png" alt="Logo" class="menu-logo">
+        
+        <div class="menu-nav">
+            <div class="menu-item active" onclick="showSection('dashboard')">Dashboard</div>
+            <div class="menu-item" onclick="showSection('tasks')">Tasks</div>
+            <div class="menu-item" onclick="showSection('calendar')">Calendar</div>
+            <div class="menu-item" onclick="showSection('progress')">Progress</div>
         </div>
-
-     <div class="menu-bar">
-            <img src="1.png" alt="Logo" class="menu-logo">
-            <div class="menu-title">Challenge Dashboard</div>
-            <div class="menu-stats">
-                </div>
+        
+        <div class="menu-stats">
+            <div class="menu-stat">
+                <span class="menu-stat-number" id="menu-day">1</span>
+                <span>Day</span>
+            </div>
+            <div class="menu-stat">
+                <span class="menu-stat-number" id="menu-progress">0%</span>
+                <span>Done</span>
             </div>
         </div>
+    </div>
 
+    
+    <div id="dashboard" class="section active">
+        <div class="section-title">Weekly Progress Rings</div>
+        
+        <div class="weekly-rings" id="weekly-rings">
 
-        <!-- Progress Overview -->
-        <div class="card">
-            <div class="progress-grid">
-                <div class="progress-item">
-                    <div class="progress-number" style="color: #3498db;" id="current-day">1</div>
-                    <div class="progress-label">Current Day</div>
-                </div>
-                <div class="progress-item">
-                    <div class="progress-number" style="color: #2ecc71;" id="completed-days">0</div>
-                    <div class="progress-label">Days Completed</div>
-                </div>
-                <div class="progress-item">
-                    <div class="progress-number" style="color: #9b59b6;" id="progress-percent">0%</div>
-                    <div class="progress-label">Progress</div>
-                </div>
-                <div class="progress-item">
-                    <div class="progress-label">Finish Date</div>
-                    <div style="font-size: 1.2rem; font-weight: bold; color: #2c3e50;" id="finish-date"></div>
-                </div>
-            </div>
-            
-            <div class="progress-bar-container">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="font-size: 0.9rem; color: #7f8c8d;">Overall Progress</span>
-                    <span style="font-size: 0.9rem; color: #7f8c8d;" id="progress-text">0/75 days</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-                </div>
-            </div>
         </div>
-
-        <!-- Daily Quote -->
-        <div class="quote-card">
-            <div class="quote-day" id="quote-day">Day 1 Motivation</div>
-            <div class="quote-text" id="daily-quote"></div>
-        </div>
-
-        <!-- Current Day Tasks -->
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
-                <h2 style="font-size: 1.8rem; color: #2c3e50; display: flex; align-items: center; gap: 10px;">
-                    📅 <span id="day-title">Day 1 Tasks</span>
-                </h2>
+        
+        <div class="current-day-card">
+            <h3 style="text-align: center; margin-bottom: 20px; color: #2c3e50;">
+                Day <span id="current-day-number">1</span> Overview
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; text-align: center;">
                 <div>
-                    <label style="margin-right: 10px; font-size: 0.9rem; color: #7f8c8d;">Start Date:</label>
-                    <input type="date" id="start-date" class="date-input">
+                    <div style="font-size: 2rem; font-weight: bold; color: #3498db;" id="dashboard-day">1</div>
+                    <div style="color: #7f8c8d; font-size: 0.9rem;">Current Day</div>
                 </div>
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #2ecc71;" id="dashboard-completed">0</div>
+                    <div style="color: #7f8c8d; font-size: 0.9rem;">Completed</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #e74c3c;" id="dashboard-remaining">6</div>
+                    <div style="color: #7f8c8d; font-size: 0.9rem;">Remaining</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-card">
+            <div style="font-weight: bold; margin-bottom: 10px;">Daily Motivation</div>
+            <div class="quote-text" id="dashboard-quote"></div>
+        </div>
+    </div>
+
+    
+    <div id="calendar" class="section">
+        <div class="section-title">75-Day Calendar</div>
+        
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div style="display: inline-flex; gap: 20px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 20px; height: 20px; background: linear-gradient(135deg, #2ecc71, #27ae60); border-radius: 4px;"></div>
+                    <span style="font-size: 14px;">Completed</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 20px; height: 20px; background: #667eea; border-radius: 4px;"></div>
+                    <span style="font-size: 14px;">Current Day</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 20px; height: 20px; background: #ffebee; border-radius: 4px;"></div>
+                    <span style="font-size: 14px;">Incomplete</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 20px; height: 20px; background: #f5f5f5; border-radius: 4px;"></div>
+                    <span style="font-size: 14px;">Future</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calendar-grid">
+            <div class="calendar-header">Sun</div>
+            <div class="calendar-header">Mon</div>
+            <div class="calendar-header">Tue</div>
+            <div class="calendar-header">Wed</div>
+            <div class="calendar-header">Thu</div>
+            <div class="calendar-header">Fri</div>
+            <div class="calendar-header">Sat</div>
+           
+        </div>
+    </div>
+
+    
+    <div id="progress" class="section">
+        <div class="section-title">Progress Overview</div>
+        
+        <div class="progress-cards">
+            <div class="progress-card">
+                <div class="progress-number" style="color: #3498db;" id="progress-current">1</div>
+                <div style="color: #7f8c8d;">Current Day</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number" style="color: #2ecc71;" id="progress-completed">0</div>
+                <div style="color: #7f8c8d;">Days Completed</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number" style="color: #9b59b6;" id="progress-percentage">0%</div>
+                <div style="color: #7f8c8d;">Challenge Progress</div>
+            </div>
+            <div class="progress-card">
+                <div style="color: #7f8c8d; margin-bottom: 10px;">Finish Date</div>
+                <div style="font-size: 1.2rem; font-weight: bold; color: #2c3e50;" id="progress-finish"></div>
+            </div>
+        </div>
+        
+        <div style="background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 25px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <span style="color: #7f8c8d;">Overall Progress</span>
+                <span style="color: #7f8c8d;" id="progress-text">0/75 days</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="main-progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="tasks" class="section">
+        <div class="section-title">Day<span id="tasks-day-number">1</span> Tasks</div>
+        
+        <div class="quote-card">
+            <div style="font-weight: bold; margin-bottom: 10px;">Today's Motivation</div>
+            <div class="quote-text" id="tasks-quote"></div>
+        </div>
+        
+        <div style="background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 25px;">
+            <div id="tasks-container">
+                
             </div>
             
-            <div class="tasks-container" id="tasks-container">
-                <!-- Tasks will be populated by JavaScript -->
-            </div>
-
             <div class="controls">
-                <div id="day-status" class="day-status day-incomplete">⏱️ In Progress</div>
-                
-                <div class="nav-buttons">
-                    <button class="btn btn-secondary" id="prev-day">Previous Day</button>
-                    <button class="btn btn-primary" id="next-day">Next Day</button>
+                <button class="btn btn-primary" id="prev-day">← Previous Day</button>
+                <button class="btn btn-primary" id="next-day">Next Day →</button>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <div id="day-status" style="display: inline-block; padding: 10px 20px; border-radius: 25px; font-weight: 500;">
+                    ⏱️ In Progress
                 </div>
             </div>
         </div>
-
-        <!-- Warning Card -->
-        <div class="warning-card">
-            <div class="warning-title">
-                ⚠️ AUTO-RESET ACTIVE
-            </div>
-            <div class="warning-text">
-                Miss ANY task on ANY day = Automatic reset to Day 1. The system will detect incomplete days and reset your progress immediately. No exceptions, no mercy.
+        
+        <div style="background: #fdedec; border-left: 4px solid #e74c3c; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <div style="color: #c0392b; font-weight: bold; margin-bottom: 10px;">⚠️ AUTO-RESET ACTIVE</div>
+            <div style="color: #a93226; font-size: 14px;">
+                Miss ANY task on ANY day = Automatic reset to Day 1. No exceptions, no mercy.
             </div>
         </div>
-
-        <!-- Reset Button -->
-        <div class="reset-section">
+        
+        <div style="text-align: center;">
             <button class="btn btn-danger" id="reset-btn">Reset Challenge</button>
         </div>
     </div>
+
+
 <script src="script.js"></script>
 <script src="service.-worker.js"></script>
 </body>
+<footer class="footer">
+  <div class="footer-content">
+    <p> <strong>75HardChallenge</strong> — You’re stronger than you think. © <span id="year"></span></p>
+  </div>
+</footer>
 </html>
