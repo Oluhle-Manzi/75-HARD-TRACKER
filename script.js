@@ -1,9 +1,10 @@
-  // Application state
+      
         let currentDay = 1;
         let progress = {};
         let startDate = new Date().toISOString().split('T')[0];
+        let currentSection = 'dashboard';
 
-        // Motivational quotes
+       
         const motivationalQuotes = [
             "Discipline is the bridge between goals and accomplishment.",
             "Your only limit is your mind. Push through the resistance.",
@@ -84,17 +85,17 @@
             "You've got this. You've always had this. Now prove it."
         ];
 
-        // Task definitions
+       
         const tasks = [
-            { id: 'workout1', label: '45min Workout #1', icon: '💪', color: '#3498db' },
-            { id: 'workout2', label: '45min Outdoor Workout', icon: '🏃', color: '#2ecc71' },
-            { id: 'diet', label: 'Follow Diet (No Cheats/Alcohol)', icon: '🎯', color: '#e74c3c' },
-            { id: 'water', label: 'Drink 1 Gallon Water', icon: '💧', color: '#00bcd4' },
-            { id: 'reading', label: 'Read 10 Pages Non-Fiction', icon: '📚', color: '#9b59b6' },
-            { id: 'photo', label: 'Take Progress Photo', icon: '📸', color: '#f39c12' }
+            { id: 'workout1', label: '45min Workout #1', icon: '💪' },
+            { id: 'workout2', label: '45min Outdoor Workout', icon: '🏃' },
+            { id: 'diet', label: 'Follow Diet (No Cheats/Alcohol)', icon: '🎯' },
+            { id: 'water', label: 'Drink 1 Gallon Water', icon: '💧' },
+            { id: 'reading', label: 'Read 10 Pages Non-Fiction', icon: '📚' },
+            { id: 'photo', label: 'Take Progress Photo', icon: '📸' }
         ];
 
-        // Helper functions
+       
         function getCurrentQuote() {
             return motivationalQuotes[(currentDay - 1) % motivationalQuotes.length];
         }
@@ -105,10 +106,15 @@
 
         function getCompletedDays() {
             let completed = 0;
-            for (let i = 1; i <= currentDay; i++) {
+            for (let i = 1; i <= Math.min(currentDay, 75); i++) {
                 if (isDayComplete(i)) completed++;
             }
             return completed;
+        }
+
+        function getTasksCompletedForDay(day) {
+            if (!progress[day]) return 0;
+            return tasks.filter(task => progress[day][task.id]).length;
         }
 
         function getEndDate() {
@@ -118,59 +124,101 @@
             return end.toLocaleDateString();
         }
 
-        function updateUI() {
-            // Update progress stats
-            const completedDays = getCompletedDays();
-            const progressPercent = Math.round((completedDays / 75) * 100);
-
-            document.getElementById('current-day').textContent = currentDay;
-            document.getElementById('completed-days').textContent = completedDays;
-            document.getElementById('progress-percent').textContent = progressPercent + '%';
-            document.getElementById('finish-date').textContent = getEndDate();
-            document.getElementById('progress-text').textContent = `${completedDays}/75 days`;
-            document.getElementById('progress-fill').style.width = progressPercent + '%';
-
-            // Update quote
-            document.getElementById('quote-day').textContent = `Day ${currentDay} Motivation`;
-            document.getElementById('daily-quote').textContent = getCurrentQuote();
-
-            // Update day title
-            document.getElementById('day-title').textContent = `Day ${currentDay} Tasks`;
-
-            // Update tasks
-            const tasksContainer = document.getElementById('tasks-container');
-            tasksContainer.innerHTML = '';
-
-            tasks.forEach(task => {
-                const isCompleted = progress[currentDay]?.[task.id];
-                const taskElement = document.createElement('div');
-                taskElement.className = `task-item ${isCompleted ? 'completed' : ''}`;
-                taskElement.onclick = () => toggleTask(currentDay, task.id);
-
-                taskElement.innerHTML = `
-                    <div class="task-checkbox">
-                        ${isCompleted ? '✓' : ''}
-                    </div>
-                    <div class="task-icon">${task.icon}</div>
-                    <div class="task-label">${task.label}</div>
-                `;
-
-                tasksContainer.appendChild(taskElement);
+       
+        function showSection(sectionName) {
+        
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
             });
+            
+        
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            
+            document.getElementById(sectionName).classList.add('active');
+            
+         
+            event.target.classList.add('active');
+            
+            currentSection = sectionName;
+            updateUI();
+        }
 
-            // Update day status
-            const dayStatusElement = document.getElementById('day-status');
-            if (isDayComplete(currentDay)) {
-                dayStatusElement.textContent = '✅ Day Complete!';
-                dayStatusElement.className = 'day-status day-complete';
-            } else {
-                dayStatusElement.textContent = '⏱️ In Progress';
-                dayStatusElement.className = 'day-status day-incomplete';
+        function createWeeklyRings() {
+            const container = document.getElementById('weekly-rings');
+            container.innerHTML = '';
+            
+            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const startOfWeek = new Date(startDate);
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+            
+            for (let week = 0; week < 11; week++) {
+                for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+                    const dayNumber = week * 7 + dayOfWeek + 1;
+                    if (dayNumber > 75) break;
+                    
+                    const tasksCompleted = getTasksCompletedForDay(dayNumber);
+                    const progressPercentage = (tasksCompleted / 6) * 100;
+                    const circumference = 2 * Math.PI * 45;
+                    const strokeDasharray = (progressPercentage / 100) * circumference;
+                    
+                    const ringDiv = document.createElement('div');
+                    ringDiv.className = 'day-ring';
+                    ringDiv.onclick = () => {
+                        currentDay = dayNumber;
+                        showSection('tasks');
+                    };
+                    
+                    ringDiv.innerHTML = `
+                        <svg class="ring-svg">
+                            <circle class="ring-bg" cx="60" cy="60" r="45"></circle>
+                            <circle class="ring-progress" cx="60" cy="60" r="45" 
+                                    stroke-dasharray="${strokeDasharray} ${circumference}"
+                                    stroke="${isDayComplete(dayNumber) ? '#4CAF50' : (dayNumber === currentDay ? '#2196F3' : '#FF9800')}">
+                            </circle>
+                        </svg>
+                        <div class="ring-center">
+                            <div class="ring-day">${daysOfWeek[dayOfWeek]}</div>
+                            <div class="ring-tasks">${tasksCompleted}/6</div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(ringDiv);
+                }
             }
+        }
 
-            // Update navigation buttons
-            document.getElementById('prev-day').disabled = currentDay === 1;
-            document.getElementById('next-day').disabled = currentDay === 75;
+    
+        function createCalendar() {
+            const calendarGrid = document.querySelector('.calendar-grid');
+            const existingDays = calendarGrid.querySelectorAll('.calendar-day');
+            existingDays.forEach(day => day.remove());
+            
+            for (let day = 1; day <= 75; day++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'calendar-day';
+                dayDiv.textContent = day;
+                dayDiv.onclick = () => {
+                    currentDay = day;
+                    showSection('tasks');
+                };
+                
+                if (day === currentDay) {
+                    dayDiv.classList.add('current');
+                } else if (day < currentDay) {
+                    if (isDayComplete(day)) {
+                        dayDiv.classList.add('completed');
+                    } else {
+                        dayDiv.classList.add('incomplete');
+                    }
+                } else {
+                    dayDiv.classList.add('future');
+                }
+                
+                calendarGrid.appendChild(dayDiv);
+            }
         }
 
         function toggleTask(day, taskId) {
@@ -180,7 +228,7 @@
             
             progress[day][taskId] = !progress[day][taskId];
             
-            // Check if any previous days are now incomplete and auto-reset
+            
             for (let i = 1; i < day; i++) {
                 if (!isDayComplete(i)) {
                     setTimeout(() => {
@@ -194,15 +242,109 @@
             updateUI();
         }
 
+        async function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            const res = await fetch("http://localhost:5000/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                localStorage.setItem("token", data.token);
+                window.location.href = "index.html";
+            } else {
+                document.getElementById("login-error").innerText = data.error || "Login failed";
+            }
+        }
+
+        function updateUI() {
+            const completedDays = getCompletedDays();
+            const progressPercent = Math.round((completedDays / 75) * 100);
+            const currentDayTasks = getTasksCompletedForDay(currentDay);
+            
+           
+            document.getElementById('menu-day').textContent = currentDay;
+            document.getElementById('menu-progress').textContent = progressPercent + '%';
+      
+            if (currentSection === 'dashboard' || currentSection === 'tasks') {
+                document.getElementById('current-day-number').textContent = currentDay;
+                document.getElementById('dashboard-day').textContent = currentDay;
+                document.getElementById('dashboard-completed').textContent = currentDayTasks;
+                document.getElementById('dashboard-remaining').textContent = 6 - currentDayTasks;
+                document.getElementById('dashboard-quote').textContent = getCurrentQuote();
+                document.getElementById('tasks-day-number').textContent = currentDay;
+                document.getElementById('tasks-quote').textContent = getCurrentQuote();
+                
+                createWeeklyRings();
+            }
+            
+            if (currentSection === 'progress') {
+                document.getElementById('progress-current').textContent = currentDay;
+                document.getElementById('progress-completed').textContent = completedDays;
+                document.getElementById('progress-percentage').textContent = progressPercent + '%';
+                document.getElementById('progress-finish').textContent = getEndDate();
+                document.getElementById('progress-text').textContent = `${completedDays}/75 days`;
+                document.getElementById('main-progress-fill').style.width = progressPercent + '%';
+            }
+            
+        
+            if (currentSection === 'calendar') {
+                createCalendar();
+            }
+            
+           
+            if (currentSection === 'tasks') {
+                const tasksContainer = document.getElementById('tasks-container');
+                tasksContainer.innerHTML = '';
+
+                tasks.forEach(task => {
+                    const isCompleted = progress[currentDay]?.[task.id];
+                    const taskElement = document.createElement('div');
+                    taskElement.className = `task-item ${isCompleted ? 'completed' : ''}`;
+                    taskElement.onclick = () => toggleTask(currentDay, task.id);
+
+                    taskElement.innerHTML = `
+                        <div class="task-checkbox">
+                            ${isCompleted ? '✓' : ''}
+                        </div>
+                        <div style="font-size: 1.2rem;">${task.icon}</div>
+                        <div class="task-label">${task.label}</div>
+                    `;
+
+                    tasksContainer.appendChild(taskElement);
+                });
+
+             
+                const dayStatusElement = document.getElementById('day-status');
+                if (isDayComplete(currentDay)) {
+                    dayStatusElement.textContent = '✅ Day Complete!';
+                    dayStatusElement.style.background = '#d5f4e6';
+                    dayStatusElement.style.color = '#27ae60';
+                } else {
+                    dayStatusElement.textContent = '⏱️ In Progress';
+                    dayStatusElement.style.background = '#fef9e7';
+                    dayStatusElement.style.color = '#f39c12';
+                }
+
+                
+                document.getElementById('prev-day').disabled = currentDay === 1;
+                document.getElementById('next-day').disabled = currentDay === 75;
+            }
+        }
+
         function resetChallenge() {
             progress = {};
             currentDay = 1;
             startDate = new Date().toISOString().split('T')[0];
-            document.getElementById('start-date').value = startDate;
             updateUI();
         }
 
-        // Event listeners
+     
         document.getElementById('prev-day').addEventListener('click', () => {
             if (currentDay > 1) {
                 currentDay--;
@@ -223,21 +365,92 @@
             }
         });
 
-        document.getElementById('start-date').addEventListener('change', (e) => {
-            startDate = e.target.value;
-            updateUI();
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const express = require("express");
+        const mongoose = require("mongoose");
+        const bcrypt = require("bcryptjs");
+        const jwt = require("jsonwebtoken");
+        const cors = require("cors");
+
+        const app = express();
+        app.use(cors());
+        app.use(express.json());
+
+        mongoose.connect("mongodb://localhost:27017/fitnessApp", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
         });
 
-        // Initialize the app
-        document.getElementById('start-date').value = startDate;
+        const userSchema = new mongoose.Schema({
+        email: String,
+        password: String
+        });
+
+        const User = mongoose.model("User", userSchema);
+
+     
+        app.post("/signup", async (req, res) => {
+        const { email, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ email, password: hashedPassword });
+        await newUser.save();
+        res.json({ message: "User created" });
+        });
+
+      
+        app.post("/login", async (req, res) => {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ error: "User not found" });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+
+        const token = jwt.sign({ id: user._id }, "SECRET_KEY", { expiresIn: "1h" });
+        res.json({ token });
+        });
+
+      
+        app.get("/dashboard", (req, res) => {
+        const token = req.headers["authorization"];
+        if (!token) return res.status(403).json({ error: "No token provided" });
+
+        jwt.verify(token, "SECRET_KEY", (err, decoded) => {
+        if (err) return res.status(401).json({ error: "Invalid token" });
+        res.json({ message: "Welcome to your dashboard!" });
+    });
+});
+
+fetch("http://localhost:5000/dashboard", {
+  headers: { "Authorization": localStorage.getItem("token") }
+});
+
+
+app.listen(5000, () => console.log("Server running on http://localhost:5000"));
+
+
+        
         updateUI();
 
-
-        if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js')
-    .then(function(reg) {
-      console.log('Service Worker registered with scope:', reg.scope);
-    }).catch(function(err) {
-      console.error('Service Worker registration failed:', err);
-    });
-}
+        const manifest = {
+            name: "75 Hard Challenge Tracker",
+            short_name: "75 Hard",
+            description: "Track your 75 Hard Challenge progress",
+            start_url: "/",
+            display: "standalone",
+            background_color: "#667eea",
+            theme_color: "#667eea",
+            icons: [
+                {
+                    src: "1.png",
+                    sizes: "192x192",
+                    type: "image/png"
+                },
+                {
+                    src: "1.png",
+                    sizes: "512x512",
+                    type: "image/png"
+                }
+            ]
+        };
