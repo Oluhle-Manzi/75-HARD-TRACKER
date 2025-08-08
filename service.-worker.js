@@ -10,7 +10,7 @@ const ASSETS_TO_CACHE = [
   '/manifest.json'
 ];
 
-// Install Service Worker and cache static assets
+
 self.addEventListener('install', function(event) {
   console.log('[ServiceWorker] Installed');
   event.waitUntil(
@@ -21,7 +21,6 @@ self.addEventListener('install', function(event) {
   self.skipWaiting();
 });
 
-// Activate Service Worker and clean old caches
 self.addEventListener('activate', function(event) {
   console.log('[ServiceWorker] Activated');
   event.waitUntil(
@@ -35,7 +34,7 @@ self.addEventListener('activate', function(event) {
   self.clients.claim();
 });
 
-// Fetch handler with cache-first strategy
+
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request).then(function(response) {
