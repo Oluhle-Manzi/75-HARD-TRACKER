@@ -27,6 +27,8 @@ Take a progress photo
 
 📱 Mobile-friendly design
 
+
+
 🚀 Getting Started
 1. Clone the Repository
 git clone https://github.com/your-username/75-hard-tracker.git
