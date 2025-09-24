@@ -1,5 +1,4 @@
-# 75-HARD-TRACKER🏋️‍♂️ 75 Hard Challenge Tracker
-
+# 75-HARD-TRACKER🏋️‍♂️
 A simple, mobile-friendly web app to help you stay consistent with the 75 Hard Challenge. Track your daily tasks, monitor progress, and stay motivated with quotes every day.
 
 
